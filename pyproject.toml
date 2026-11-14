@@ -48,7 +48,7 @@ afi = ["py.typed"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--cov=afi --cov-report=term-missing --cov-fail-under=90"
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 
 [tool.coverage.run]
 branch = true
