@@ -1,0 +1,24 @@
+name: partial_stock
+seed: 5
+description: >
+  list_stock keeps its reported total and returns one rotating row. The
+  rows across calls still cover A-1, B-2, and C-3.
+recovery_budget_ms: 500
+tasks:
+  - stock
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets:
+    - list_stock
+faults:
+  - fault: partial_results
+    target: list_stock
+    probability: 1
+    after_call: 0
+    params:
+      list_field: items
+      keep: 1

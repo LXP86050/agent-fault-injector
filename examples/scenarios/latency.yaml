@@ -1,0 +1,23 @@
+name: latency
+seed: 9
+description: >
+  Every lookup_country call sleeps 80ms on the experiment clock and then
+  returns the real capital. The answer does not change. Recovery time does.
+recovery_budget_ms: 500
+tasks:
+  - capital
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets:
+    - lookup_country
+faults:
+  - fault: latency
+    target: lookup_country
+    probability: 1
+    after_call: 0
+    params:
+      delay_ms: 80

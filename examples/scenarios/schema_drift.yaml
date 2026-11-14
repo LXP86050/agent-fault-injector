@@ -1,0 +1,25 @@
+name: schema_drift
+seed: 3
+description: >
+  lookup_country renames capital to capital_city on every call. The value
+  is still there. A reader that only accepts the old key misses it.
+recovery_budget_ms: 500
+tasks:
+  - capital
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets:
+    - lookup_country
+faults:
+  - fault: schema_drift
+    target: lookup_country
+    probability: 1
+    after_call: 0
+    params:
+      rename:
+        capital: capital_city
+      drop: []

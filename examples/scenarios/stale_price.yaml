@@ -1,0 +1,25 @@
+name: stale_price
+seed: 7
+description: >
+  get_price rewrites the quote to 80 with an old timestamp on the faulted
+  draws. The live quote is 120. Seed 7 serves a fresh read on the third call.
+recovery_budget_ms: 500
+tasks:
+  - price
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets:
+    - get_price
+faults:
+  - fault: stale_data
+    target: get_price
+    probability: 0.5
+    after_call: 0
+    params:
+      overrides:
+        price: 80
+        as_of_ms: -10000
