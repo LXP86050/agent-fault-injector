@@ -1,0 +1,24 @@
+name: timeouts
+seed: 7
+description: >
+  lookup_country times out on the draws this seed faults. With seed 7 the
+  first two calls time out and the third returns. healthcheck is outside
+  the blast radius.
+recovery_budget_ms: 500
+tasks:
+  - capital
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets:
+    - lookup_country
+faults:
+  - fault: timeout
+    target: lookup_country
+    probability: 0.5
+    after_call: 0
+    params:
+      delay_ms: 30

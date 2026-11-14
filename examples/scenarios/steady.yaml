@@ -1,0 +1,18 @@
+name: steady
+seed: 1
+description: No faults. This is the control, and it is left out of the overall score.
+recovery_budget_ms: 500
+tasks:
+  - capital
+  - atlas
+  - ticket
+  - stock
+  - price
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets: []
+faults: []

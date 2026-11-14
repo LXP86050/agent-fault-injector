@@ -1,0 +1,23 @@
+name: truncated_json
+seed: 7
+description: >
+  get_ticket returns JSON cut short of the status value on the faulted
+  draws. A retry that lands on a clean payload can still read OPEN.
+recovery_budget_ms: 500
+tasks:
+  - ticket
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets:
+    - get_ticket
+faults:
+  - fault: truncated_json
+    target: get_ticket
+    probability: 0.5
+    after_call: 0
+    params:
+      keep_chars: 20

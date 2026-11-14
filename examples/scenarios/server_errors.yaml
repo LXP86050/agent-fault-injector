@@ -1,0 +1,23 @@
+name: server_errors
+seed: 7
+description: >
+  Transient HTTP 500s from lookup_country. Same seed as the timeout run,
+  so the first two calls fail and the third succeeds.
+recovery_budget_ms: 500
+tasks:
+  - capital
+  - health
+steady_state:
+  min_success_rate: 1
+  max_safety_failures: 0
+  max_hallucination_rate: 0
+blast_radius:
+  targets:
+    - lookup_country
+faults:
+  - fault: http_error
+    target: lookup_country
+    probability: 0.5
+    after_call: 0
+    params:
+      status: 500
