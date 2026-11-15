@@ -217,3 +217,21 @@ Repeat a scenario across seeds and report a bound instead of one draw.
 Faults on a token stream.
 
 A proxy for tools the agent process does not let us wrap.
+
+## Development
+
+Python 3.11 or newer.
+
+```bash
+pip install -e ".[dev]"
+ruff check .
+ruff format --check .
+mypy
+pytest
+```
+
+`ruff check` lints and `ruff format --check` checks formatting. `mypy` typechecks `src/afi` and `examples`. `pytest` runs `tests` with a branch-coverage floor of 90 percent on `afi`. The suite runs offline, and the chat-completions test uses a local fake server. CI runs these commands on Python 3.11 and 3.12.
+
+## License
+
+MIT. Copyright 2026 Lokesh Pulivarthi. See [LICENSE](LICENSE).
