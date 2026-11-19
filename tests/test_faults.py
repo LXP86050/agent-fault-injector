@@ -232,6 +232,30 @@ def test_injector_is_deterministic_and_honors_after_call():
     assert run() == run()
 
 
+def test_disarmed_fault_does_not_draw():
+    # after_call is a warm-up. Those calls must not consume a roll, or a later
+    # armed fault on the same target would see a different draw.
+    class CountingRandom(random.Random):
+        def __init__(self, seed: int) -> None:
+            super().__init__(seed)
+            self.draws = 0
+
+        def random(self) -> float:
+            self.draws += 1
+            return super().random()
+
+    rng = CountingRandom(0)
+    fault = FaultSpec("timeout", "lookup", 1, 2, {"delay_ms": 4})
+    injector = Injector(_scenario(fault), clock=ManualClock(), rng=rng)
+    tool = injector.tool("lookup", lambda: {"ok": True})
+    assert tool() == {"ok": True}
+    assert tool() == {"ok": True}
+    assert rng.draws == 0
+    with pytest.raises(ToolTimeout):
+        tool()
+    assert rng.draws == 1
+
+
 def test_first_armed_fault_wins_and_star_stays_inside_the_radius():
     faults = (
         FaultSpec("timeout", "lookup", 1, 0, {"delay_ms": 3}),
